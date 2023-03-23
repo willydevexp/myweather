@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">My Weather</string>
     <string name="title_item_detail">Item Detail</string>
+    <string name="api_key">cd392241b5d24620d294e1a689c06c5e</string>
 </resources>
