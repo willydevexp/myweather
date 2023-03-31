@@ -20,33 +20,18 @@ class DetailActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        intent.getParcelableExtra<DayWeather>(WEATHER)?.run {
-            binding.weatherDetailToolbar.title = ""
+        ActivityDetailBinding.inflate(layoutInflater).run {
+            setContentView(root)
 
-            binding.weatherDetailImage.loadUrl("https://openweathermap.org/img/wn/${weather[0].icon}@4x.png")
+            val dayWeather = intent.getParcelableExtra<DayWeather>(WEATHER) ?: throw IllegalStateException()
 
-            binding.weatherDetailSummary.text = getDate(dt)
+            weatherDetailToolbar.title = ""
+            weatherDetailImage.loadUrl("https://openweathermap.org/img/wn/${dayWeather.weather[0].icon}@4x.png")
+            weatherDetailSummary.text = getDate(dayWeather.dt)
+            weatherDetailInfo.setWeatherInfo(dayWeather)
 
-            binding.weatherDetailInfo.text = buildSpannedString {
-
-                bold { appendLine(weather[0].description.uppercase()) }
-
-                bold { append("Temperature: ") }
-                appendLine("${temp.max.roundToInt()} / ${temp.min.roundToInt()} ºC" )
-
-                bold { append("Humidity: ") }
-                appendLine("${humidity.toString()} %")
-
-                bold { append("Pressure: ") }
-                appendLine("${pressure.toString()} hPa")
-
-                bold { append("Wind speed: ") }
-                appendLine("${speed.toString()} Km/h")
-
-            }
         }
+
     }
 }
