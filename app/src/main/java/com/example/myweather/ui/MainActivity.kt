@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             // Cargamos el adapter con la lista del tiempo diario para la ciudad geolocalizada
-            adapter.weatherList = weatherRepository.getDailyWeather()!!.list
+            adapter.submitList(weatherRepository.getDailyWeather()!!.list)
 
             // Ponemos el nombre de la ciudad en la barra de título
             val title = supportActionBar?.title
