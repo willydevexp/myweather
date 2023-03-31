@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 
-data class RemoteResponse(
+data class DailyWeather(
     val city: City,
     val cnt: Int,
     val cod: String,
