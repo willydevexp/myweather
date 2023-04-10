@@ -16,30 +16,20 @@ class LocationRepository(activity: AppCompatActivity) {
         private const val DEFAULT_CITY = "Unknown"
     }
 
-    private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
+    private val locationDataSource: LocationDataSource = PlayServicesLocationDataSource(activity)
     private val coarsePermissionChecker = PermissionChecker(
         activity,
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
     private val geocoder = Geocoder(activity)
-
-    suspend fun getLastLocation(): Location? = findLastLocation();
+    
     suspend fun findLastRegion(): String = findLastLocation().toRegion()
     suspend fun findLastCity(): String = findLastLocation().toCity()
 
-    private suspend fun findLastLocation(): Location? {
+    suspend fun findLastLocation(): Location? {
         val success = coarsePermissionChecker.request()
-        return if (success) lastLocationSuspended() else null
+        return if (success) locationDataSource.findLastLocation() else null
     }
-
-    @SuppressLint("MissingPermission")
-    private suspend fun lastLocationSuspended(): Location? =
-        suspendCancellableCoroutine { continuation ->
-            fusedLocationClient.lastLocation
-                .addOnCompleteListener {
-                    continuation.resume(it.result)
-                }
-        }
 
     private fun Location?.toRegion(): String {
         val addresses = this?.let {

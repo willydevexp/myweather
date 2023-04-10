@@ -9,7 +9,7 @@ class WeatherRepository (activity: AppCompatActivity) {
     private val locationRepository = LocationRepository(activity)
 
     suspend fun getDailyWeather() =
-        locationRepository.getLastLocation()?.let {
+        locationRepository.findLastLocation()?.let {
             RemoteConnection.service
                 .getDailyWeather(
                     it.latitude,
