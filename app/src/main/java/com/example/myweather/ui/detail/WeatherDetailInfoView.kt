@@ -1,4 +1,4 @@
-package com.example.myweather.ui
+package com.example.myweather.ui.detail
 
 import android.content.Context
 import android.util.AttributeSet
