@@ -1,4 +1,4 @@
-package com.example.myweather
+package com.example.myweather.common
 
 
 import java.text.SimpleDateFormat
@@ -8,7 +8,7 @@ fun getDate(timestamp: Int) :String {
     //val calendar = Calendar.getInstance(Locale.ENGLISH)
     //calendar.timeInMillis = timestamp * 1000L
     val date = Date (timestamp * 1000L)
-    val formatter =  SimpleDateFormat("EEE, MMM d", Locale.ENGLISH)
+    val formatter =  SimpleDateFormat("MMM d, EEE", Locale.ENGLISH)
     return formatter.format(date).toString()
 }
 

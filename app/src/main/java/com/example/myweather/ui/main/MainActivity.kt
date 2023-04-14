@@ -2,23 +2,27 @@ package com.example.myweather.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.example.myweather.R
+import com.example.myweather.common.visible
 import com.example.myweather.databinding.ActivityMainBinding
 import com.example.myweather.model.DayWeather
 import com.example.myweather.model.WeatherRepository
 import com.example.myweather.ui.detail.DetailActivity
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity(), MainPresenter.View {
+class MainActivity : AppCompatActivity() {
 
-    private val presenter by lazy {
-        MainPresenter(WeatherRepository(this), lifecycleScope)
-    }
-
-    private val adapter = WeatherListAdapter { presenter.onMovieClicked(it) }
+    private val viewModel: MainViewModel by viewModels { MainViewModelFactory(WeatherRepository(this)) }
+    private val adapter = WeatherListAdapter { viewModel.onDayWeatherClicked(it) }
     private lateinit var binding: ActivityMainBinding
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,39 +30,32 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        presenter.onCreate(this@MainActivity)
         binding.rvWeather.adapter = adapter
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.state.collect(::updateUI)
+            }
+        }
+
     }
 
-    override fun onDestroy() {
-        presenter.onDestroy()
-        super.onDestroy()
+    private fun updateUI(state: MainViewModel.UiState) {
+        //Log.i("MainActivity.updateUI", "Progress: ${state.loading}. CityName: ${state.cityName}. WeatherList: ${state.weatherList}")
+        binding.progress.visible = state.loading
+        val app_name = getString(R.string.app_name)
+        supportActionBar?.title = "$app_name - ${state.cityName}"
+        state.weatherList?.let(adapter::submitList)
+        state.navigateTo?.let(::navigateTo)
     }
 
-    override fun showProgress() {
-        binding.progress.visibility = View.VISIBLE
-    }
-
-    override fun hideProgress() {
-        binding.progress.visibility = View.GONE
-    }
-
-    override fun updateData(weatherList: List<DayWeather>) {
-        adapter.submitList(weatherList)
-    }
-
-    override fun navigateTo(dayWeather: DayWeather) {
+    private fun navigateTo(dayWeather: DayWeather) {
+        //Log.i ("MainActiviy.navigateTo", "CityName: ${viewModel.state.value.cityName}. DayWeather: $dayWeather")
         val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra(DetailActivity.CITY_NAME, viewModel.state.value.cityName)
         intent.putExtra(DetailActivity.DAY_WEATHER, dayWeather)
         startActivity(intent)
-    }
-
-    override fun setTitle (cityName: String) {
-        // Ponemos el nombre de la ciudad en la barra de título
-        val title = supportActionBar?.title
-        supportActionBar?.title = "$title - $cityName"
+        viewModel.onNavigateDone()
     }
 
 }

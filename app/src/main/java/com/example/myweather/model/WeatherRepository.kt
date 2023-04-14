@@ -19,3 +19,4 @@ class WeatherRepository (activity: AppCompatActivity) {
         }
 
 }
+
