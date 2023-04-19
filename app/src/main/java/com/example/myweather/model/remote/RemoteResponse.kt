@@ -1,4 +1,4 @@
-package com.example.myweather.model
+package com.example.myweather.model.remote
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -42,12 +42,12 @@ data class DayWeather (
     val sunrise: Int,
     val sunset: Int,
     val temp: Temp,
-    val weather: List<Weather>
+    val weather: List<WeatherType>
 ) : Parcelable
 
 
 @Parcelize
-data class Weather(
+data class WeatherType(
     val description: String,
     val icon: String,
     val id: Int,

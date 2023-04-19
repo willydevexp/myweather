@@ -1,4 +1,4 @@
-package com.example.myweather.model
+package com.example.myweather.model.remote
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

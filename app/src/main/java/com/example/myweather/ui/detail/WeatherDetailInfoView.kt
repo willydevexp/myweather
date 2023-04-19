@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
-import com.example.myweather.model.DayWeather
+import com.example.myweather.model.database.Weather
 import kotlin.math.roundToInt
 
 class WeatherDetailInfoView @JvmOverloads constructor(
@@ -14,13 +14,13 @@ class WeatherDetailInfoView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : AppCompatTextView(context, attrs, defStyleAttr) {
 
-    fun setWeatherInfo(dayWeather: DayWeather) = with(dayWeather) {
+    fun setWeatherInfo(weather: Weather) = with(weather) {
         text = buildSpannedString {
 
-            bold { appendLine(weather[0].description.uppercase()) }
+            bold { appendLine(description.uppercase()) }
 
             bold { append("Temperature: ") }
-            appendLine("${temp.max.roundToInt()} / ${temp.min.roundToInt()} ºC" )
+            appendLine("${tempMax.roundToInt()} / ${tempMin.roundToInt()} ºC" )
 
             bold { append("Humidity: ") }
             appendLine("${humidity.toString()} %")

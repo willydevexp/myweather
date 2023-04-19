@@ -3,13 +3,11 @@ package com.example.myweather.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.myweather.model.DayWeather
 import com.example.myweather.model.WeatherRepository
-import kotlinx.coroutines.channels.Channel
+import com.example.myweather.model.database.Weather
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val weatherRepository: WeatherRepository) : ViewModel() {
@@ -17,29 +15,34 @@ class MainViewModel(private val weatherRepository: WeatherRepository) : ViewMode
     data class UiState(
         val loading: Boolean = false,
         val cityName: String = "",
-        val weatherList: List<DayWeather>? = null,
-        val navigateTo: DayWeather? = null
+        val weatherList: List<Weather>? = null,
+        val navigateTo: Weather? = null
     )
 
     private val _state = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
 
     init {
-        refresh()
+        viewModelScope.launch {
+            val cityName = weatherRepository.getCityName()
+            weatherRepository.weatherList.collect() { weatherList ->
+                _state.value = UiState(cityName = cityName, weatherList = weatherList)
+            }
+
+        }
+
     }
 
     private fun refresh() {
         viewModelScope.launch {
-            weatherRepository.getDailyWeather()?.let {
-                _state.value = UiState(loading = true)
-                _state.value = UiState(cityName = it.city.name, weatherList = it.list)
-            }
+            _state.value = UiState(loading = true)
+            weatherRepository.requestWeatherList()
         }
     }
 
 
-    fun onDayWeatherClicked(dayWeather: DayWeather) {
-        _state.value = _state.value.copy(navigateTo = dayWeather)
+    fun onWeatherClicked(weather: Weather) {
+        _state.value = _state.value.copy(navigateTo = weather)
     }
 
     fun onNavigateDone() {

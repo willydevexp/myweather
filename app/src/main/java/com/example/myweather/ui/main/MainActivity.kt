@@ -2,26 +2,25 @@ package com.example.myweather.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.myweather.R
+import com.example.myweather.common.app
 import com.example.myweather.common.visible
 import com.example.myweather.databinding.ActivityMainBinding
-import com.example.myweather.model.DayWeather
+import com.example.myweather.model.remote.DayWeather
 import com.example.myweather.model.WeatherRepository
+import com.example.myweather.model.database.Weather
 import com.example.myweather.ui.detail.DetailActivity
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by viewModels { MainViewModelFactory(WeatherRepository(this)) }
-    private val adapter = WeatherListAdapter { viewModel.onDayWeatherClicked(it) }
+    private val viewModel: MainViewModel by viewModels { MainViewModelFactory(WeatherRepository(app)) }
+    private val adapter = WeatherListAdapter { viewModel.onWeatherClicked(it) }
     private lateinit var binding: ActivityMainBinding
 
 
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         binding.rvWeather.adapter = adapter
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect(::updateUI)
             }
         }
@@ -49,11 +48,11 @@ class MainActivity : AppCompatActivity() {
         state.navigateTo?.let(::navigateTo)
     }
 
-    private fun navigateTo(dayWeather: DayWeather) {
+    private fun navigateTo(weather: Weather) {
         //Log.i ("MainActiviy.navigateTo", "CityName: ${viewModel.state.value.cityName}. DayWeather: $dayWeather")
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra(DetailActivity.CITY_NAME, viewModel.state.value.cityName)
-        intent.putExtra(DetailActivity.DAY_WEATHER, dayWeather)
+        intent.putExtra(DetailActivity.WEATHER_DT, weather.dt)
         startActivity(intent)
         viewModel.onNavigateDone()
     }

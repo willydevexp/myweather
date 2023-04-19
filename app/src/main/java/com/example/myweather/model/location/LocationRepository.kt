@@ -1,33 +1,30 @@
-package com.example.myweather.model
+package com.example.myweather.model.location
 
 import android.Manifest
-import android.annotation.SuppressLint
+import android.app.Application
 import android.location.Geocoder
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
 
-class LocationRepository(activity: AppCompatActivity) {
+
+class LocationRepository(application: Application) {
 
     companion object {
         private const val DEFAULT_REGION = "US"
         private const val DEFAULT_CITY = "Unknown"
     }
 
-    private val locationDataSource: LocationDataSource = PlayServicesLocationDataSource(activity)
+    private val locationDataSource: LocationDataSource = PlayServicesLocationDataSource(application)
     private val coarsePermissionChecker = PermissionChecker(
-        activity,
+        application,
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
-    private val geocoder = Geocoder(activity)
+    private val geocoder = Geocoder(application)
     
-    suspend fun findLastRegion(): String = findLastLocation().toRegion()
-    suspend fun findLastCity(): String = findLastLocation().toCity()
+    suspend fun getLastRegion(): String = findLastLocation().toRegion()
+    suspend fun getLastCity(): String = findLastLocation().toCity()
 
     suspend fun findLastLocation(): Location? {
-        val success = coarsePermissionChecker.request()
+        val success = coarsePermissionChecker.check()
         return if (success) locationDataSource.findLastLocation() else null
     }
 

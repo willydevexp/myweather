@@ -1,7 +1,7 @@
-package com.example.myweather.model
+package com.example.myweather.model.location
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import android.app.Application
 import android.location.Location
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -11,7 +11,7 @@ interface LocationDataSource {
     suspend fun findLastLocation(): Location?
 }
 
-class PlayServicesLocationDataSource(activity: Activity) : LocationDataSource {
+class PlayServicesLocationDataSource(activity: Application) : LocationDataSource {
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
 
     @SuppressLint("MissingPermission")
