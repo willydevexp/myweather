@@ -47,7 +47,7 @@ class DetailActivity : AppCompatActivity() {
     private fun updateUI(state: DetailViewModel.UiState) = with(binding) {
         val weather = state.weather
         //Log.i ("MainActiviy.navigateTo", "CityName: ${state.cityName}. DayWeather: $dayWeather")
-        weatherDetailToolbar.title = state.cityName
+        //weatherDetailToolbar.title = state.cityName
         weather?.let {
             weatherDetailImage.loadUrl("https://openweathermap.org/img/wn/${it.icon}@4x.png")
             weatherDetailSummary.text = getDate(it.dt)

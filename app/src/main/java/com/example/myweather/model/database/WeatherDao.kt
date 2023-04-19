@@ -13,12 +13,19 @@ interface WeatherDao {
     fun getWeather(dt: Int): Flow<Weather>
 
     @Query("SELECT COUNT(dt) FROM Weather")
-    fun weatherCount(): Int
+    suspend fun weatherCount(): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertWeatherList(weather: List<Weather>)
+    suspend fun insertWeatherList(weather: List<Weather>)
 
     @Update
-    fun updateWeather(weather: Weather)
+    suspend fun updateWeather(weather: Weather)
+
+    @Query("DELETE FROM Weather")
+    suspend fun deleteAll()
+
+    @Delete
+    suspend fun deleteWeather(weather: Weather)
+
 
 }

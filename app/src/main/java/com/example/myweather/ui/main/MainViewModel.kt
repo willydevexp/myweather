@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class MainViewModel(private val weatherRepository: WeatherRepository) : ViewModel() {
 
     data class UiState(
-        val loading: Boolean = false,
+        val isRefreshing: Boolean = false,
         val cityName: String = "",
         val weatherList: List<Weather>? = null,
         val navigateTo: Weather? = null
@@ -25,18 +25,20 @@ class MainViewModel(private val weatherRepository: WeatherRepository) : ViewMode
     init {
         viewModelScope.launch {
             val cityName = weatherRepository.getCityName()
+            // Actualizamos la ciudad y el tiempo cuando se actualice el repositorio
             weatherRepository.weatherList.collect() { weatherList ->
                 _state.value = UiState(cityName = cityName, weatherList = weatherList)
             }
-
         }
-
+        // Forzamos una actualización para tener los datos actualizados
+        refresh()
     }
 
-    private fun refresh() {
+    fun refresh() {
         viewModelScope.launch {
-            _state.value = UiState(loading = true)
-            weatherRepository.requestWeatherList()
+            _state.value = UiState(isRefreshing = true)
+            weatherRepository.requestWeatherList(true)
+            _state.value = UiState(isRefreshing = false)
         }
     }
 

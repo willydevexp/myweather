@@ -19,7 +19,8 @@ class LocationRepository(application: Application) {
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
     private val geocoder = Geocoder(application)
-    
+
+
     suspend fun getLastRegion(): String = findLastLocation().toRegion()
     suspend fun getLastCity(): String = findLastLocation().toCity()
 

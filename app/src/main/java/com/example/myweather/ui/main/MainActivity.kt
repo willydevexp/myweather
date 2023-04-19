@@ -2,6 +2,10 @@ package com.example.myweather.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -31,30 +35,57 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.rvWeather.adapter = adapter
 
+        // Actualizamos la UI cuando actualice el viewmodel
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect(::updateUI)
             }
         }
 
+        binding.swiperefresh.setOnRefreshListener {
+            viewModel.refresh()
+        }
     }
 
     private fun updateUI(state: MainViewModel.UiState) {
-        //Log.i("MainActivity.updateUI", "Progress: ${state.loading}. CityName: ${state.cityName}. WeatherList: ${state.weatherList}")
-        binding.progress.visible = state.loading
-        val app_name = getString(R.string.app_name)
-        supportActionBar?.title = "$app_name - ${state.cityName}"
+        Log.i("MainActivity.updateUI", "isRefreshing: ${state.isRefreshing}. CityName: ${state.cityName}. WeatherList: ${state.weatherList}")
+        binding.swiperefresh.isRefreshing = state.isRefreshing
+        if (state.cityName!="") {
+            val app_name = getString(R.string.app_name)
+            supportActionBar?.title = "$app_name - ${state.cityName}"
+        }
         state.weatherList?.let(adapter::submitList)
         state.navigateTo?.let(::navigateTo)
     }
 
     private fun navigateTo(weather: Weather) {
-        //Log.i ("MainActiviy.navigateTo", "CityName: ${viewModel.state.value.cityName}. DayWeather: $dayWeather")
+        Log.i ("MainActiviy.navigateTo", "CityName: ${viewModel.state.value.cityName}. Weather: $weather")
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra(DetailActivity.CITY_NAME, viewModel.state.value.cityName)
         intent.putExtra(DetailActivity.WEATHER_DT, weather.dt)
         startActivity(intent)
         viewModel.onNavigateDone()
     }
+
+    /** Create main options menu */
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    /** Listen for option item selections so that we receive a notification
+     * when the user requests a refresh by selecting the refresh action bar item.
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_refresh -> {
+                viewModel.refresh()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 
 }

@@ -10,9 +10,10 @@ class WeatherLocalDataSource(private val weatherDao: WeatherDao) {
 
     fun getWeather (dt: Int) : Flow<Weather> = weatherDao.getWeather(dt)
 
-    fun isEmpty(): Boolean = weatherDao.weatherCount() == 0
+    suspend fun isEmpty(): Boolean = weatherDao.weatherCount() == 0
 
-    fun save(weatherList: List<Weather>) {
-        weatherDao.insertWeatherList(weatherList)
+    suspend fun updateWeatherList(newWeatherList: List<Weather>) {
+        weatherDao.deleteAll()
+        weatherDao.insertWeatherList(newWeatherList)
     }
 }

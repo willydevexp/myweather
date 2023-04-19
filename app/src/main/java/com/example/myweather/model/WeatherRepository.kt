@@ -1,6 +1,8 @@
 package com.example.myweather.model
 
+import android.location.Location
 import android.provider.Settings.Global.getString
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myweather.App
 import com.example.myweather.R
@@ -18,16 +20,19 @@ class WeatherRepository (application: App) {
     private val locationRepository =  LocationRepository(application)
     private val localDataSource = WeatherLocalDataSource(application.db.weatherDao())
     private val remoteDataSource = WeatherRemoteDataSource(
-        application.getString(R.string.api_key),
-        locationRepository
+        application.getString(R.string.api_key)
     )
 
     val weatherList = localDataSource.weatherList
 
-    suspend fun requestWeatherList() = withContext(Dispatchers.IO) {
-        if (localDataSource.isEmpty()) {
-            val dailyWeather = remoteDataSource.getDailyWeather()
-            localDataSource.save(dailyWeather!!.list.toLocalModel())
+    suspend fun requestWeatherList(forceRefresh: Boolean = false)  {
+        if (localDataSource.isEmpty() || forceRefresh) {
+            locationRepository.findLastLocation()?.let {
+                //Log.i("WeatherRepository", "Location LastCity: ${locationRepository.getLastCity()}")
+                val dailyWeather = remoteDataSource.getDailyWeather(it)
+                localDataSource.updateWeatherList(dailyWeather.list.toLocalModel())
+                //Log.i("WeatherRepository", "Weather City: ${dailyWeather.city.name}")
+            }
         }
     }
 
