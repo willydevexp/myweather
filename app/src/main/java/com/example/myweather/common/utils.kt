@@ -2,7 +2,8 @@ package com.example.myweather.common
 
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 fun getDate(timestamp: Int) :String {
     //val calendar = Calendar.getInstance(Locale.ENGLISH)

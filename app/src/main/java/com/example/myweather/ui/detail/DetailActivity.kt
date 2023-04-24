@@ -2,14 +2,11 @@ package com.example.myweather.ui.detail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.navArgs
-import androidx.navigation.navArgs
 import com.example.myweather.common.app
 import com.example.myweather.common.getDate
 import com.example.myweather.common.loadUrl

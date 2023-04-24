@@ -3,7 +3,6 @@ package com.example.myweather.model.database
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.myweather.model.remote.Temp
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

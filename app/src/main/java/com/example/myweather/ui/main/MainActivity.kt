@@ -12,10 +12,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.myweather.R
+import com.example.myweather.common.Error
 import com.example.myweather.common.app
-import com.example.myweather.common.visible
 import com.example.myweather.databinding.ActivityMainBinding
-import com.example.myweather.model.remote.DayWeather
 import com.example.myweather.model.WeatherRepository
 import com.example.myweather.model.database.Weather
 import com.example.myweather.ui.detail.DetailActivity
@@ -56,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         }
         state.weatherList?.let(adapter::submitList)
         state.navigateTo?.let(::navigateTo)
+        binding.error.text = state.error?.let(::errorToString)
     }
 
     private fun navigateTo(weather: Weather) {
@@ -65,6 +65,12 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(DetailActivity.WEATHER_DT, weather.dt)
         startActivity(intent)
         viewModel.onNavigateDone()
+    }
+
+    fun errorToString(error: Error) = when (error) {
+        Error.Connectivity -> getString(R.string.connectivity_error)
+        is Error.Server -> getString(R.string.server_error) + error.code
+        is Error.Unknown -> getString(R.string.unknown_error) + error.message
     }
 
     /** Create main options menu */

@@ -3,11 +3,15 @@ package com.example.myweather.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.myweather.common.Error
+import com.example.myweather.common.toError
 import com.example.myweather.model.WeatherRepository
 import com.example.myweather.model.database.Weather
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val weatherRepository: WeatherRepository) : ViewModel() {
@@ -16,7 +20,8 @@ class MainViewModel(private val weatherRepository: WeatherRepository) : ViewMode
         val isRefreshing: Boolean = false,
         val cityName: String = "",
         val weatherList: List<Weather>? = null,
-        val navigateTo: Weather? = null
+        val navigateTo: Weather? = null,
+        val error: Error? = null
     )
 
     private val _state = MutableStateFlow(UiState())
@@ -26,8 +31,9 @@ class MainViewModel(private val weatherRepository: WeatherRepository) : ViewMode
         viewModelScope.launch {
             val cityName = weatherRepository.getCityName()
             // Actualizamos la ciudad y el tiempo cuando se actualice el repositorio
-            weatherRepository.weatherList.collect() { weatherList ->
-                _state.value = UiState(cityName = cityName, weatherList = weatherList)
+            weatherRepository.weatherList
+                .catch { cause -> _state.update { it.copy(error = cause.toError()) } }
+                .collect() { weatherList ->  _state.update {UiState(cityName = cityName, weatherList = weatherList) }
             }
         }
         // Forzamos una actualización para tener los datos actualizados
@@ -36,9 +42,9 @@ class MainViewModel(private val weatherRepository: WeatherRepository) : ViewMode
 
     fun refresh() {
         viewModelScope.launch {
-            _state.value = UiState(isRefreshing = true)
-            weatherRepository.requestWeatherList(true)
-            _state.value = UiState(isRefreshing = false)
+            _state.update { _state.value.copy (isRefreshing = true) }
+            val error = weatherRepository.requestWeatherList(true)
+            _state.update { _state.value.copy(isRefreshing = false, error = error) }
         }
     }
 

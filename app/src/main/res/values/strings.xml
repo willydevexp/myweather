@@ -3,4 +3,7 @@
     <string name="title_item_detail">Item Detail</string>
     <string name="api_key">cd392241b5d24620d294e1a689c06c5e</string>
     <string name="menu_refresh">Refresh</string>
+    <string name="connectivity_error">Connectivity Error</string>
+    <string name="server_error">\"Server Error: \"</string>
+    <string name="unknown_error">\"Unknown Error: \"</string>
 </resources>
