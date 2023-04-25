@@ -1,4 +1,4 @@
-package com.example.myweather.model.remote
+package com.example.myweather.data.remote
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

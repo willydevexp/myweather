@@ -11,7 +11,7 @@ import com.example.myweather.common.getDate
 import com.example.myweather.common.inflate
 import com.example.myweather.common.loadUrl
 import com.example.myweather.databinding.ItemWeatherBinding
-import com.example.myweather.model.database.Weather
+import com.example.myweather.data.database.Weather
 import kotlin.math.roundToInt
 
 class WeatherListAdapter(private val listener: (Weather) -> Unit) :

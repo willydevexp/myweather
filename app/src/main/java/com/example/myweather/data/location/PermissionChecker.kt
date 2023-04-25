@@ -1,4 +1,4 @@
-package com.example.myweather.model.location
+package com.example.myweather.data.location
 
 import android.app.Application
 import android.content.pm.PackageManager
@@ -10,4 +10,5 @@ class PermissionChecker(private val application: Application, private val permis
         application,
         permission
     ) == PackageManager.PERMISSION_GRANTED
+
 }

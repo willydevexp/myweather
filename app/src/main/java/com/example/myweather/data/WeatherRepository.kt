@@ -1,15 +1,14 @@
-package com.example.myweather.model
+package com.example.myweather.data
 
-import android.util.Log
 import com.example.myweather.App
 import com.example.myweather.R
 import com.example.myweather.common.Error
 import com.example.myweather.common.tryCall
-import com.example.myweather.model.database.Weather
-import com.example.myweather.model.datasource.WeatherLocalDataSource
-import com.example.myweather.model.datasource.WeatherRemoteDataSource
-import com.example.myweather.model.location.LocationRepository
-import com.example.myweather.model.remote.DayWeather
+import com.example.myweather.data.database.Weather
+import com.example.myweather.data.datasource.WeatherLocalDataSource
+import com.example.myweather.data.datasource.WeatherRemoteDataSource
+import com.example.myweather.data.location.LocationRepository
+import com.example.myweather.data.remote.DayWeather
 import kotlinx.coroutines.flow.Flow
 
 class WeatherRepository (application: App) {

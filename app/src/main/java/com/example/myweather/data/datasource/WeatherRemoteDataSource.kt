@@ -1,7 +1,7 @@
-package com.example.myweather.model.datasource
+package com.example.myweather.data.datasource
 
 import android.location.Location
-import com.example.myweather.model.remote.RemoteConnection
+import com.example.myweather.data.remote.RemoteConnection
 
 class WeatherRemoteDataSource(private val apiKey: String) {
 

@@ -23,4 +23,6 @@
     <style name="Theme.MyWeather.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.MyWeather.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.DarkOverlay" parent="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 </resources>

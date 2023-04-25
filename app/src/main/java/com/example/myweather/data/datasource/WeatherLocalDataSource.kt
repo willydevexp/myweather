@@ -1,7 +1,7 @@
-package com.example.myweather.model.datasource
+package com.example.myweather.data.datasource
 
-import com.example.myweather.model.database.Weather
-import com.example.myweather.model.database.WeatherDao
+import com.example.myweather.data.database.Weather
+import com.example.myweather.data.database.WeatherDao
 import kotlinx.coroutines.flow.Flow
 
 class WeatherLocalDataSource(private val weatherDao: WeatherDao) {

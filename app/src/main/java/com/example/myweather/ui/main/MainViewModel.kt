@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.myweather.common.Error
 import com.example.myweather.common.toError
-import com.example.myweather.model.WeatherRepository
-import com.example.myweather.model.database.Weather
+import com.example.myweather.data.WeatherRepository
+import com.example.myweather.data.database.Weather
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

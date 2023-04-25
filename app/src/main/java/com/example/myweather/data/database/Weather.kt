@@ -1,4 +1,4 @@
-package com.example.myweather.model.database
+package com.example.myweather.data.database
 
 import android.os.Parcelable
 import androidx.room.Entity
