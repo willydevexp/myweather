@@ -2,8 +2,8 @@ package com.example.myweather.data
 
 import com.example.myweather.App
 import com.example.myweather.R
-import com.example.myweather.common.Error
-import com.example.myweather.common.tryCall
+import com.example.myweather.ui.common.Error
+import com.example.myweather.ui.common.tryCall
 import com.example.myweather.data.database.Weather
 import com.example.myweather.data.datasource.WeatherLocalDataSource
 import com.example.myweather.data.datasource.WeatherRemoteDataSource

@@ -1,4 +1,4 @@
-package com.example.myweather.common
+package com.example.myweather.ui.common
 
 import retrofit2.HttpException
 import java.io.IOException
@@ -21,3 +21,5 @@ inline fun <T> tryCall(action: () -> T): Error? = try {
 } catch (e: Exception) {
     e.toError()
 }
+
+

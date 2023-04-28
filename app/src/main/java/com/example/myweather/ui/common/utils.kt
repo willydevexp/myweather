@@ -1,4 +1,4 @@
-package com.example.myweather.common
+package com.example.myweather.ui.common
 
 
 import java.text.SimpleDateFormat

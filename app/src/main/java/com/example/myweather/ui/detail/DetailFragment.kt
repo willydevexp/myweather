@@ -9,9 +9,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.example.myweather.R
-import com.example.myweather.common.app
-import com.example.myweather.common.getDate
-import com.example.myweather.common.loadUrl
+import com.example.myweather.ui.common.app
+import com.example.myweather.ui.common.getDate
+import com.example.myweather.ui.common.loadUrl
 import com.example.myweather.data.WeatherRepository
 import com.example.myweather.databinding.FragmentDetailBinding
 import kotlinx.coroutines.launch

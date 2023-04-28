@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myweather.R
-import com.example.myweather.common.basicDiffUtil
-import com.example.myweather.common.getDate
-import com.example.myweather.common.inflate
-import com.example.myweather.common.loadUrl
+import com.example.myweather.ui.common.basicDiffUtil
+import com.example.myweather.ui.common.getDate
+import com.example.myweather.ui.common.inflate
+import com.example.myweather.ui.common.loadUrl
 import com.example.myweather.databinding.ItemWeatherBinding
 import com.example.myweather.data.database.Weather
 import kotlin.math.roundToInt
