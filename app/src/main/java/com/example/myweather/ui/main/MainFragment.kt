@@ -10,10 +10,18 @@ import androidx.fragment.app.viewModels
 import com.example.myweather.R
 import com.example.myweather.ui.common.app
 import com.example.myweather.data.WeatherRepository
+import com.example.myweather.data.LocationRepository
 import com.example.myweather.databinding.FragmentMainBinding
+import com.example.myweather.framework.AndroidPermissionChecker
+import com.example.myweather.framework.PlayServicesLocationDataSource
+import com.example.myweather.framework.database.WeatherRoomDataSource
+import com.example.myweather.framework.server.WeatherServerDataSource
+import com.example.myweather.usecases.GetCityNameUseCase
+import com.example.myweather.usecases.GetWeatherListUseCase
+import com.example.myweather.usecases.RequestWeatherListUseCase
 import com.example.myweather.ui.common.launchAndCollect
 import com.google.android.material.snackbar.Snackbar
-import com.example.myweather.ui.common.Error
+import com.example.myweather.domain.Error
 
 
 class MainFragment : Fragment(R.layout.fragment_main) {
@@ -21,8 +29,25 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private lateinit var mainState: MainState
 
     private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory(WeatherRepository(requireActivity().app))
+        val application = requireActivity().app
+
+        val locationRepository =  LocationRepository(
+            PlayServicesLocationDataSource(application),
+            AndroidPermissionChecker(application)
+        )
+        val localDataSource = WeatherRoomDataSource(requireActivity().app.db.weatherDao())
+        val remoteDataSource = WeatherServerDataSource(
+            getString(R.string.api_key)
+        )
+        val repository = WeatherRepository(locationRepository, localDataSource, remoteDataSource)
+
+        MainViewModelFactory(
+            GetCityNameUseCase(repository),
+            GetWeatherListUseCase(repository),
+            RequestWeatherListUseCase(repository)
+        )
     }
+
     private val adapter = WeatherListAdapter { mainState.onWeatherClicked(viewModel.state.value.cityName, it)}
 
 
@@ -67,8 +92,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         Log.i("MainActivity.updateUI", "isRefreshing: ${state.isRefreshing}. CityName: ${state.cityName}. WeatherList: ${state.weatherList}")
         swiperefresh.isRefreshing = state.isRefreshing
         if (state.cityName!="") {
-            val app_name = getString(R.string.app_name)
-            toolbar.title = "$app_name - ${state.cityName}"
+            val appName = getString(R.string.app_name)
+            toolbar.title = "$appName - ${state.cityName}"
         }
         state.weatherList?.let(adapter::submitList)
         if (state.error!=null)

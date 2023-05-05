@@ -2,7 +2,7 @@ package com.example.myweather
 
 import android.app.Application
 import androidx.room.Room
-import com.example.myweather.data.database.WeatherDatabase
+import com.example.myweather.framework.database.WeatherDatabase
 
 class App : Application() {
 

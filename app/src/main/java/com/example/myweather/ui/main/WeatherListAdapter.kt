@@ -11,11 +11,12 @@ import com.example.myweather.ui.common.getDate
 import com.example.myweather.ui.common.inflate
 import com.example.myweather.ui.common.loadUrl
 import com.example.myweather.databinding.ItemWeatherBinding
-import com.example.myweather.data.database.Weather
+import com.example.myweather.domain.Weather
 import kotlin.math.roundToInt
 
 class WeatherListAdapter(private val listener: (Weather) -> Unit) :
-    ListAdapter<Weather, WeatherListAdapter.ViewHolder>(basicDiffUtil { old, new -> old.dt == new.dt }) {
+    ListAdapter<Weather,
+            WeatherListAdapter.ViewHolder>(basicDiffUtil { old, new -> old.dt == new.dt }) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = parent.inflate(R.layout.item_weather, false)

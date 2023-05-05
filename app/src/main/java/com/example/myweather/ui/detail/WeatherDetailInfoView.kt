@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
-import com.example.myweather.data.database.Weather
+import com.example.myweather.domain.Weather
 import kotlin.math.roundToInt
 
 class WeatherDetailInfoView @JvmOverloads constructor(
