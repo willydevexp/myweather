@@ -2,11 +2,11 @@ package com.example.myweather
 
 import android.app.Application
 import androidx.room.Room
-import com.example.myweather.framework.database.WeatherDatabase
+import com.example.myweather.framework.database.AppDatabase
 
 class App : Application() {
 
-    lateinit var db: WeatherDatabase
+    lateinit var db: AppDatabase
         private set
 
     override fun onCreate() {
@@ -14,7 +14,7 @@ class App : Application() {
 
         db = Room.databaseBuilder(
             this,
-            WeatherDatabase::class.java, "weather-db"
+            AppDatabase::class.java, "weather-db"
         ).build()
     }
 }

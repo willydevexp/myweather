@@ -1,31 +1,31 @@
-package com.example.myweather.ui.main
+package com.example.myweather.ui.location
 
 import android.Manifest
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.example.myweather.domain.Weather
+import com.example.myweather.domain.DomainLocation
 import com.example.myweather.ui.common.PermissionRequester
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-fun Fragment.buildMainState(
+fun Fragment.buildLocationsState(
     scope: CoroutineScope = viewLifecycleOwner.lifecycleScope,
     navController: NavController = findNavController(),
     locationPermissionRequester: PermissionRequester = PermissionRequester(
         this,
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
-) = MainState(scope, navController, locationPermissionRequester)
+) = LocationState(scope, navController, locationPermissionRequester)
 
-class MainState(
+class LocationState(
     private val scope: CoroutineScope,
     private val navController: NavController,
     private val locationPermissionRequester: PermissionRequester
 ) {
-    fun onWeatherClicked(cityName: String, weather: Weather) {
-        val action = MainFragmentDirections.actionMainFragmentToDetailFragment(cityName, weather.dt)
+    fun onLocationClicked (locationId: Int) {
+        val action = LocationFragmentDirections.actionLocationFragmentToWeatherFragment(locationId)
         navController.navigate(action)
     }
 

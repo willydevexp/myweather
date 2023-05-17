@@ -12,16 +12,6 @@ android:layout_marginLeft="8dp"
 android:layout_marginRight="8dp"
 android:padding="8dp">
 
-<ImageView
-    android:id="@+id/imgItemDelete"
-    android:layout_width="20dp"
-    android:layout_height="20dp"
-    android:layout_gravity="end"
-    android:layout_margin="8dp"
-    android:src="@drawable/ic_item_delete"
-    android:visibility="gone"
-    app:tint="@color/colorAccent" />
-
 
 <LinearLayout
     android:layout_width="match_parent"

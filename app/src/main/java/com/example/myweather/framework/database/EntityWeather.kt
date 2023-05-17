@@ -6,14 +6,15 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity
-data class WeatherTable(
-    @PrimaryKey() val dt: Int,
+@Entity(primaryKeys = ["dt", "idLocation"])
+data class EntityWeather(
+    val dt: Int,
     val tempMax: Double,
     val tempMin: Double,
     val humidity: Int,
     val pressure: Int,
     val speed: Double,
     val description: String,
-    val icon: String
+    val icon: String,
+    val idLocation: Int
 ) : Parcelable

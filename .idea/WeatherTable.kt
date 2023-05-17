@@ -1,6 +1,7 @@
-package com.example.myweather.domain
-
-data class Weather (
+@Parcelize
+@Entity
+data class LocationTable(
+    @PrimaryKey() val id: Int,
     val dt: Int,
     val tempMax: Double,
     val tempMin: Double,
@@ -8,6 +9,5 @@ data class Weather (
     val pressure: Int,
     val speed: Double,
     val description: String,
-    val icon: String,
-    val idLocation: Int
-)
+    val icon: String
+) : Parcelable

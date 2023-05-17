@@ -1,4 +1,4 @@
-package com.example.myweather.ui.main
+package com.example.myweather.ui.weather
 
 
 import android.os.Bundle
@@ -7,56 +7,63 @@ import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.example.myweather.R
 import com.example.myweather.ui.common.app
-import com.example.myweather.data.WeatherRepository
-import com.example.myweather.data.LocationRepository
-import com.example.myweather.databinding.FragmentMainBinding
+import com.example.myweather.data.AppRepository
+import com.example.myweather.data.LocationServiceRepository
+import com.example.myweather.databinding.FragmentWeatherBinding
 import com.example.myweather.framework.AndroidPermissionChecker
-import com.example.myweather.framework.PlayServicesLocationDataSource
-import com.example.myweather.framework.database.WeatherRoomDataSource
+import com.example.myweather.framework.PlayServicesLocationServiceDataSource
+import com.example.myweather.framework.database.RoomDataSource
 import com.example.myweather.framework.server.WeatherServerDataSource
-import com.example.myweather.usecases.GetCityNameUseCase
-import com.example.myweather.usecases.GetWeatherListUseCase
-import com.example.myweather.usecases.RequestWeatherListUseCase
 import com.example.myweather.ui.common.launchAndCollect
 import com.google.android.material.snackbar.Snackbar
 import com.example.myweather.domain.Error
+import com.example.myweather.usecases.location.GetLocationNameUseCase
+import com.example.myweather.usecases.weather.GetWeatherOfLocationUseCase
+import com.example.myweather.usecases.weather.RequestWeatherOfLocationUseCase
 
 
-class MainFragment : Fragment(R.layout.fragment_main) {
+class WeatherFragment : Fragment(R.layout.fragment_weather) {
 
-    private lateinit var mainState: MainState
+    private val safeArgs: WeatherFragmentArgs by navArgs()
 
-    private val viewModel: MainViewModel by viewModels {
+    private lateinit var weatherState: MainState
+
+    private val viewModel: WeatherViewModel by viewModels {
         val application = requireActivity().app
 
-        val locationRepository =  LocationRepository(
-            PlayServicesLocationDataSource(application),
-            AndroidPermissionChecker(application)
-        )
-        val localDataSource = WeatherRoomDataSource(requireActivity().app.db.weatherDao())
+        val localDataSource = RoomDataSource(requireActivity().app.db.appDao())
+
         val remoteDataSource = WeatherServerDataSource(
             getString(R.string.api_key)
         )
-        val repository = WeatherRepository(locationRepository, localDataSource, remoteDataSource)
 
-        MainViewModelFactory(
-            GetCityNameUseCase(repository),
-            GetWeatherListUseCase(repository),
-            RequestWeatherListUseCase(repository)
+        val locationServiceRepository =  LocationServiceRepository(
+            PlayServicesLocationServiceDataSource(application),
+            AndroidPermissionChecker(application)
+        )
+
+        val repository = AppRepository(locationServiceRepository, localDataSource, remoteDataSource)
+
+        WeatherViewModelFactory(
+            safeArgs.idLocation,
+            GetLocationNameUseCase(repository),
+            RequestWeatherOfLocationUseCase(repository),
+            GetWeatherOfLocationUseCase(repository)
         )
     }
 
-    private val adapter = WeatherListAdapter { mainState.onWeatherClicked(viewModel.state.value.cityName, it)}
+    private val adapter = WeatherListAdapter { weatherState.onWeatherClicked(it)}
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainState = buildMainState()
+        weatherState = buildMainState()
 
-        val binding = FragmentMainBinding.bind(view).apply {
+        val binding = FragmentWeatherBinding.bind(view).apply {
             toolbar.setUp()
 
             swiperefresh.setOnRefreshListener {
@@ -70,9 +77,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             binding.updateUI(it)
         }
 
-        mainState.requestLocationPermission {
-            viewModel.refresh()
-        }
+        viewModel.getWeather()
+
     }
 
     private fun Toolbar.setUp () {
@@ -88,14 +94,14 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }
     }
 
-    private fun FragmentMainBinding.updateUI(state: MainViewModel.UiState) {
-        Log.i("MainActivity.updateUI", "isRefreshing: ${state.isRefreshing}. CityName: ${state.cityName}. WeatherList: ${state.weatherList}")
+    private fun FragmentWeatherBinding.updateUI(state: WeatherViewModel.UiState) {
+        val appName = getString(R.string.app_name)
+        toolbar.title = "$appName - ${state.locationName}"
+
         swiperefresh.isRefreshing = state.isRefreshing
-        if (state.cityName!="") {
-            val appName = getString(R.string.app_name)
-            toolbar.title = "$appName - ${state.cityName}"
-        }
+
         state.weatherList?.let(adapter::submitList)
+
         if (state.error!=null)
             Snackbar.make(myCoordinatorLayout, errorToString(state.error), Snackbar.LENGTH_LONG).show()
     }

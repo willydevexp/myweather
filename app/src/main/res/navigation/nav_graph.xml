@@ -3,31 +3,60 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/locationFragment">
 
     <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.myweather.ui.main.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
+        android:id="@+id/locationFragment"
+        android:name="com.example.myweather.ui.location.LocationFragment"
+        android:label="LocationFragment"
+        tools:layout="@layout/fragment_location">
         <action
-            android:id="@+id/action_mainFragment_to_detailFragment"
+            android:id="@+id/action_locationFragment_to_weatherFragment"
+            app:destination="@id/weatherFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_locationFragment_to_locationDialog"
+            app:destination="@id/locationDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/locationDialog"
+        android:name="com.example.myweather.ui.location.LocationDialog"
+        android:label="LocationDialog"
+        tools:layout="@layout/dialog_location">
+        <action
+            android:id="@+id/action_locationDialog_to_locationFragment"
+            app:destination="@id/locationFragment" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/weatherFragment"
+        android:name="com.example.myweather.ui.weather.WeatherFragment"
+        android:label="fragment_weather"
+        tools:layout="@layout/fragment_weather">
+        <action
+            android:id="@+id/action_weatherFragment_to_detailFragment"
             app:destination="@id/detailFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="idLocation"
+            app:argType="integer" />
     </fragment>
+
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.example.myweather.ui.detail.DetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" >
-        <argument
-            android:name="cityName"
-            app:argType="string" />
+        tools:layout="@layout/fragment_detail">
         <argument
             android:name="weatherDT"
             app:argType="integer" />
     </fragment>
+
+
 </navigation>

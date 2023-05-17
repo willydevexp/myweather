@@ -12,14 +12,14 @@ import com.example.myweather.R
 import com.example.myweather.ui.common.app
 import com.example.myweather.ui.common.getDate
 import com.example.myweather.ui.common.loadUrl
-import com.example.myweather.data.WeatherRepository
-import com.example.myweather.data.LocationRepository
+import com.example.myweather.data.AppRepository
+import com.example.myweather.data.LocationServiceRepository
 import com.example.myweather.databinding.FragmentDetailBinding
 import com.example.myweather.framework.AndroidPermissionChecker
-import com.example.myweather.framework.PlayServicesLocationDataSource
-import com.example.myweather.framework.database.WeatherRoomDataSource
+import com.example.myweather.framework.PlayServicesLocationServiceDataSource
+import com.example.myweather.framework.database.RoomDataSource
 import com.example.myweather.framework.server.WeatherServerDataSource
-import com.example.myweather.usecases.GetWeatherUseCase
+import com.example.myweather.usecases.weather.GetWeatherUseCase
 import kotlinx.coroutines.launch
 
 class DetailFragment : Fragment(R.layout.fragment_detail) {
@@ -29,26 +29,26 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private val viewModel: DetailViewModel by viewModels {
         val application = requireActivity().app
 
-        val locationRepository =  LocationRepository(
-            PlayServicesLocationDataSource(application),
-            AndroidPermissionChecker(application)
-        )
-        val localDataSource = WeatherRoomDataSource(requireActivity().app.db.weatherDao())
+        val localDataSource = RoomDataSource(requireActivity().app.db.appDao())
         val remoteDataSource = WeatherServerDataSource(
             getString(R.string.api_key)
         )
-        val repository = WeatherRepository(locationRepository, localDataSource, remoteDataSource)
 
-        DetailViewModelFactory(requireNotNull(safeArgs.cityName),
-            requireNotNull(safeArgs.weatherDT), GetWeatherUseCase(repository)
+        val locationServiceRepository =  LocationServiceRepository(
+            PlayServicesLocationServiceDataSource(application),
+            AndroidPermissionChecker(application)
         )
+
+        val repository = AppRepository(locationServiceRepository, localDataSource, remoteDataSource)
+
+        DetailViewModelFactory(requireNotNull(safeArgs.weatherDT), GetWeatherUseCase(repository))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = FragmentDetailBinding.bind(view)
-        binding.weatherDetailToolbar.setNavigationOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
 
@@ -62,7 +62,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private fun FragmentDetailBinding.updateUI(state: DetailViewModel.UiState) {
         val weather = state.weather
         //Log.i ("MainActiviy.navigateTo", "CityName: ${state.cityName}. DayWeather: $dayWeather")
-        weatherDetailToolbar.title = state.cityName
         weather?.let {
             weatherDetailImage.loadUrl("https://openweathermap.org/img/wn/${it.icon}@4x.png")
             weatherDetailSummary.text = getDate(it.dt)
