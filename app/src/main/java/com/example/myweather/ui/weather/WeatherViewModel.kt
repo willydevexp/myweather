@@ -1,26 +1,30 @@
 package com.example.myweather.ui.weather
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.myweather.domain.Error
 import com.example.myweather.framework.toError
 import com.example.myweather.usecases.location.GetLocationNameUseCase
 import com.example.myweather.usecases.weather.GetWeatherOfLocationUseCase
 import com.example.myweather.usecases.weather.RequestWeatherOfLocationUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class WeatherViewModel(private val locationId: Int,
-                       private val getLocationNameUseCase: GetLocationNameUseCase,
-                       private val requestWeatherOfLocationUseCase: RequestWeatherOfLocationUseCase,
-                       private val getWeatherOfLocationUseCase: GetWeatherOfLocationUseCase
+@HiltViewModel
+class WeatherViewModel @Inject constructor(safeStateHandle: SavedStateHandle,
+                                           private val getLocationNameUseCase: GetLocationNameUseCase,
+                                           private val requestWeatherOfLocationUseCase: RequestWeatherOfLocationUseCase,
+                                           private val getWeatherOfLocationUseCase: GetWeatherOfLocationUseCase
 ) : ViewModel() {
+
+    private val locationId = WeatherFragmentArgs.fromSavedStateHandle(safeStateHandle).locationId
 
     data class UiState(
         val isRefreshing: Boolean = false,
@@ -66,16 +70,4 @@ class WeatherViewModel(private val locationId: Int,
 
 }
 
-@Suppress("UNCHECKED_CAST")
-class WeatherViewModelFactory(private val locationId: Int,
-                              private val getLocationNameUseCase: GetLocationNameUseCase,
-                              private val requestWeatherOfLocationUseCase: RequestWeatherOfLocationUseCase,
-                              private val getWeatherOfLocationUseCase: GetWeatherOfLocationUseCase) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return WeatherViewModel(locationId,
-            getLocationNameUseCase,
-            requestWeatherOfLocationUseCase,
-            getWeatherOfLocationUseCase) as T
-    }
-}
+

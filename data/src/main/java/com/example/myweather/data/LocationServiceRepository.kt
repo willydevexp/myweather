@@ -5,8 +5,9 @@ import com.example.myweather.data.PermissionChecker.Permission.COARSE_LOCATION
 import com.example.myweather.data.datasource.LocalDataSource
 import com.example.myweather.data.datasource.LocationServiceDataSource
 import com.example.myweather.domain.DomainLocation
+import javax.inject.Inject
 
-class LocationServiceRepository(
+class LocationServiceRepository @Inject constructor (
     private val locationServiceDataSource: LocationServiceDataSource,
     private val permissionChecker: PermissionChecker
 ) {

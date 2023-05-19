@@ -2,8 +2,9 @@ package com.example.myweather.usecases.location
 
 import com.example.myweather.data.AppRepository
 import com.example.myweather.domain.DomainLocation
+import javax.inject.Inject
 
-class DelLocationUseCase (private val repository: AppRepository) {
+class DelLocationUseCase @Inject constructor (private val repository: AppRepository) {
 
     suspend operator fun invoke(idLocation: Int) {
         repository.delLocation(idLocation)

@@ -9,40 +9,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.example.myweather.R
-import com.example.myweather.ui.common.app
+import com.example.myweather.databinding.FragmentDetailBinding
 import com.example.myweather.ui.common.getDate
 import com.example.myweather.ui.common.loadUrl
-import com.example.myweather.data.AppRepository
-import com.example.myweather.data.LocationServiceRepository
-import com.example.myweather.databinding.FragmentDetailBinding
-import com.example.myweather.framework.AndroidPermissionChecker
-import com.example.myweather.framework.PlayServicesLocationServiceDataSource
-import com.example.myweather.framework.database.RoomDataSource
-import com.example.myweather.framework.server.WeatherServerDataSource
-import com.example.myweather.usecases.weather.GetWeatherUseCase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private val safeArgs: DetailFragmentArgs by navArgs()
 
-    private val viewModel: DetailViewModel by viewModels {
-        val application = requireActivity().app
-
-        val localDataSource = RoomDataSource(requireActivity().app.db.appDao())
-        val remoteDataSource = WeatherServerDataSource(
-            getString(R.string.api_key)
-        )
-
-        val locationServiceRepository =  LocationServiceRepository(
-            PlayServicesLocationServiceDataSource(application),
-            AndroidPermissionChecker(application)
-        )
-
-        val repository = AppRepository(locationServiceRepository, localDataSource, remoteDataSource)
-
-        DetailViewModelFactory(requireNotNull(safeArgs.weatherDT), GetWeatherUseCase(repository))
-    }
+    private val viewModel: DetailViewModel by viewModels ()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

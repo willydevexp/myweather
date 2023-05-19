@@ -9,5 +9,5 @@ data class Weather (
     val speed: Double,
     val description: String,
     val icon: String,
-    val idLocation: Int
+    val locationId: Int
 )

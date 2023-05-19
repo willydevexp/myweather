@@ -5,8 +5,9 @@ import com.example.myweather.domain.DomainLocation
 import com.example.myweather.domain.Weather
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class RoomDataSource(private val appDao: AppDao) : LocalDataSource {
+class RoomDataSource @Inject constructor (private val appDao: AppDao) : LocalDataSource {
 
     override val weatherList = appDao.getAllWeather().map { it.toDomainWeather() }
 
@@ -49,7 +50,7 @@ private fun EntityWeather.toDomainWeather(): Weather =
         speed,
         description,
         icon,
-        idLocation
+        locationId
     )
 
 private fun List<Weather>.fromDomainWeather(): List<EntityWeather> =
@@ -64,7 +65,7 @@ private fun Weather.fromDomainWeather(): EntityWeather = EntityWeather(
     speed,
     description,
     icon,
-    idLocation
+    locationId
 )
 private fun List<EntityLocation>.toDomainLocation(): List<DomainLocation> = map { it.toDomainLocation() }
 

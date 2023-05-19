@@ -9,9 +9,10 @@ import com.example.myweather.data.datasource.LocationServiceDataSource
 import com.example.myweather.domain.DomainLocation
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.suspendCancellableCoroutine
+import javax.inject.Inject
 import kotlin.coroutines.resume
 
-class PlayServicesLocationServiceDataSource(application: Application) : LocationServiceDataSource {
+class PlayServicesLocationDataSource @Inject constructor(application: Application) : LocationServiceDataSource {
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(application)
     private val geocoder = Geocoder(application)
 

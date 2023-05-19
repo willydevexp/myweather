@@ -7,8 +7,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
-import androidx.navigation.fragment.findNavController
-import com.example.myweather.R
 import com.example.myweather.databinding.DialogLocationBinding
 
 class LocationDialog : DialogFragment() {

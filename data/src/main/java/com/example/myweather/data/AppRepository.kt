@@ -6,10 +6,10 @@ import com.example.myweather.domain.DomainLocation
 import com.example.myweather.domain.Weather
 import com.example.myweather.domain.Error
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
 
-class AppRepository (
+class AppRepository @Inject constructor (
     private val locationServiceRepository: LocationServiceRepository,
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: WeatherRemoteDataSource) {

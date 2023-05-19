@@ -2,11 +2,10 @@ package com.example.myweather.framework.database
 
 import android.os.Parcelable
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(primaryKeys = ["dt", "idLocation"])
+@Entity(primaryKeys = ["dt", "locationId"])
 data class EntityWeather(
     val dt: Int,
     val tempMax: Double,
@@ -16,5 +15,5 @@ data class EntityWeather(
     val speed: Double,
     val description: String,
     val icon: String,
-    val idLocation: Int
+    val locationId: Int
 ) : Parcelable
