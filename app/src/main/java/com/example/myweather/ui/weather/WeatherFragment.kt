@@ -45,7 +45,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
             binding.updateUI(it)
         }
 
-        viewModel.getWeather()
+        //viewModel.getWeather()
 
     }
 

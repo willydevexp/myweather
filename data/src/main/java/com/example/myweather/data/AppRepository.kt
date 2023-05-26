@@ -58,7 +58,7 @@ class AppRepository @Inject constructor (
         }
     }
 
-    fun getWeatherOfLocation(locationId: Int): Flow<List<Weather>> =
+    suspend fun getWeatherOfLocation(locationId: Int): Flow<List<Weather>> =
         localDataSource.getWeatherOfLocation(locationId)
 
 
