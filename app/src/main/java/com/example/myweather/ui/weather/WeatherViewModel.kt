@@ -38,11 +38,8 @@ class WeatherViewModel @Inject constructor(
     val state: StateFlow<UiState> = _state.asStateFlow()
 
     init {
-        //if (_state.value.weatherList == null) {
-            getLocationName()
-            refresh()
-        //} else
-        //    getWeather()
+        getLocationName()
+        refresh()
     }
 
     fun getWeather() {

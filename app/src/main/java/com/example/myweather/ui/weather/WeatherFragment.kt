@@ -6,7 +6,6 @@ import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
 import com.example.myweather.R
 import com.example.myweather.databinding.FragmentWeatherBinding
 import com.example.myweather.domain.Error
@@ -16,8 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class WeatherFragment : Fragment(R.layout.fragment_weather) {
-
-    private val safeArgs: WeatherFragmentArgs by navArgs()
 
     private lateinit var weatherState: MainState
 
@@ -51,6 +48,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
 
     private fun Toolbar.setUp () {
         inflateMenu(R.menu.main_menu)
+        setNavigationOnClickListener{requireActivity().onBackPressed()}
         setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_refresh -> {
