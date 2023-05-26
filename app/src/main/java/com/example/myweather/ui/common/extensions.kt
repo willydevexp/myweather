@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
 import com.example.myweather.App
+import com.example.myweather.domain.Error
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 

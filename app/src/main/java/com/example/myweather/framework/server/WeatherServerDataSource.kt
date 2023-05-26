@@ -23,6 +23,16 @@ class WeatherServerDataSource @Inject constructor (@ApiKey private val apiKey: S
                 .toDomainModel(location)
         }
 
+
+    override suspend fun findLocation(locationName: String): Either<Error, DomainLocation> =
+        tryCall {
+            RemoteConnection.service
+                .findLocation(
+                    locationName,
+                    apiKey
+                )[0].toDomainModel()
+        }
+
     private fun List<DayWeather>.toDomainModel(location: DomainLocation): List<Weather> =
         map { it.toDomainModel(location) }
 
@@ -37,5 +47,14 @@ class WeatherServerDataSource @Inject constructor (@ApiKey private val apiKey: S
             weather[0].description,
             weather[0].icon,
             location.id
+        )
+
+    private fun FindLocationResponseItem.toDomainModel() : DomainLocation =
+        DomainLocation(
+            0,
+            lat,
+            lon,
+            country,
+            name
         )
 }

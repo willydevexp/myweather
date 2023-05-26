@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 
-data class DailyWeather(
+data class DailyWeatherResponse (
     val city: City,
     val cnt: Int,
     val cod: String,
@@ -71,4 +71,6 @@ data class FeelsLike(
     val morn: Double,
     val night: Double
 ) : Parcelable
+
+
 

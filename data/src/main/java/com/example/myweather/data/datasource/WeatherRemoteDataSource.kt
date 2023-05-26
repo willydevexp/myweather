@@ -8,5 +8,7 @@ import com.example.myweather.domain.Weather
 
 interface WeatherRemoteDataSource {
     suspend fun getDailyWeather(location: DomainLocation): Either<Error, List<Weather>>
+
+    suspend fun findLocation(locationName: String): Either<Error, DomainLocation>
 }
 

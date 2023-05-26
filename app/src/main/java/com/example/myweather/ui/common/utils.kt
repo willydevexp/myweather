@@ -1,6 +1,7 @@
 package com.example.myweather.ui.common
 
 
+import com.example.myweather.domain.Error
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -12,4 +13,6 @@ fun getDate(timestamp: Int) :String {
     val formatter =  SimpleDateFormat("MMM d, EEE", Locale.ENGLISH)
     return formatter.format(date).toString()
 }
+
+
 

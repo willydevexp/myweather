@@ -3,6 +3,7 @@ package com.example.myweather.ui.location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myweather.domain.DomainLocation
+import com.example.myweather.domain.Error
 import com.example.myweather.usecases.location.AddLocationUseCase
 import com.example.myweather.usecases.location.DelLocationUseCase
 import com.example.myweather.usecases.location.GetLastLocationUseCase
@@ -25,7 +26,8 @@ class LocationViewModel @Inject constructor(
 
     data class UiState(
         val lastLocation : DomainLocation? = null,
-        val locationList : List<DomainLocation>? = null
+        val locationList : List<DomainLocation>? = null,
+        val error: Error? = null
     )
 
     private val _state = MutableStateFlow(UiState())
@@ -46,7 +48,8 @@ class LocationViewModel @Inject constructor(
 
     fun addLocation (locationName: String)  {
         viewModelScope.launch {
-            addLocationUseCase(locationName)
+            val error = addLocationUseCase(locationName)
+            _state.update { _state.value.copy(error = error) }
         }
     }
 
