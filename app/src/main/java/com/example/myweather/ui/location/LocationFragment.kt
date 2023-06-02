@@ -8,7 +8,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myweather.R
 import com.example.myweather.databinding.FragmentLocationBinding
+import com.example.myweather.domain.Error
 import com.example.myweather.ui.common.launchAndCollect
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -61,12 +63,22 @@ class LocationFragment : Fragment(R.layout.fragment_location) {
             txtLastLocation.text = "${location.name} - ${location.countryCode}"
         }
         state.locationList?.let(adapter::submitList)
+        if (state.error!=null)
+            Snackbar.make(myCoordinatorLayout, errorToString(state.error), Snackbar.LENGTH_LONG).show()
     }
 
 
     private fun showLocationDialog() {
         findNavController().navigate(R.id.action_locationFragment_to_locationDialog)
     }
+
+
+    fun errorToString(error: Error) = when (error) {
+        Error.Connectivity -> getString(R.string.connectivity_error)
+        is Error.Server -> getString(R.string.server_error) + error.code
+        is Error.Unknown -> getString(R.string.unknown_error) + error.message
+    }
+
 
 }
 

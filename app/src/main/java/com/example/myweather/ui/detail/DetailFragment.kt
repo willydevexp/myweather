@@ -7,7 +7,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.navArgs
 import com.example.myweather.R
 import com.example.myweather.databinding.FragmentDetailBinding
 import com.example.myweather.ui.common.getDate
@@ -17,8 +16,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetailFragment : Fragment(R.layout.fragment_detail) {
-
-    private val safeArgs: DetailFragmentArgs by navArgs()
 
     private val viewModel: DetailViewModel by viewModels ()
 
@@ -38,6 +35,9 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private fun FragmentDetailBinding.updateUI(state: DetailViewModel.UiState) {
+        val appName = getString(R.string.app_name)
+        toolbar.title = "$appName - ${state.locationName}"
+
         val weather = state.weather
         //Log.i ("MainActiviy.navigateTo", "CityName: ${state.cityName}. DayWeather: $dayWeather")
         weather?.let {

@@ -1,5 +1,6 @@
 package com.example.myweather.data
 
+import arrow.core.Either
 import com.example.myweather.data.datasource.LocalDataSource
 import com.example.myweather.data.datasource.WeatherRemoteDataSource
 import com.example.myweather.domain.DomainLocation
@@ -22,9 +23,18 @@ class AppRepository @Inject constructor (
         return location
     }
 
-    suspend fun addLocation(locationName: String) {
-        val location = locationServiceRepository.findLocation(locationName)
-        localDataSource.addLocation(location)
+    suspend fun findLocation (locationName: String) : Either<Error, DomainLocation> {
+        return remoteDataSource.findLocation(locationName)
+    }
+
+    suspend fun addLocation(locationName: String) : Error? {
+        //val location = locationServiceRepository.findLocation(locationName)
+        val location = findLocation(locationName)
+        // Guardamos el tiempo de la localización o devolvemos error
+        location.fold(ifLeft = { return it }) {
+            localDataSource.addLocation(it)
+            return null
+        }
     }
 
     suspend fun delLocation(locationId: Int) {
@@ -44,11 +54,11 @@ class AppRepository @Inject constructor (
         // Guardamos el tiempo de la localización o devolvemos error
         dailyWeather.fold(ifLeft = { return it }) {
             localDataSource.insertWeatherList(locationId, it)
+            return null
         }
-        return null
     }
 
-    fun getWeatherOfLocation(locationId: Int): Flow<List<Weather>> =
+    suspend fun getWeatherOfLocation(locationId: Int): Flow<List<Weather>> =
         localDataSource.getWeatherOfLocation(locationId)
 
 

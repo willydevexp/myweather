@@ -18,10 +18,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class WeatherViewModel @Inject constructor(safeStateHandle: SavedStateHandle,
-                                           private val getLocationNameUseCase: GetLocationNameUseCase,
-                                           private val requestWeatherOfLocationUseCase: RequestWeatherOfLocationUseCase,
-                                           private val getWeatherOfLocationUseCase: GetWeatherOfLocationUseCase
+class WeatherViewModel @Inject constructor(
+    safeStateHandle: SavedStateHandle,
+    private val getLocationNameUseCase: GetLocationNameUseCase,
+    private val requestWeatherOfLocationUseCase: RequestWeatherOfLocationUseCase,
+    private val getWeatherOfLocationUseCase: GetWeatherOfLocationUseCase
 ) : ViewModel() {
 
     private val locationId = WeatherFragmentArgs.fromSavedStateHandle(safeStateHandle).locationId
@@ -37,11 +38,8 @@ class WeatherViewModel @Inject constructor(safeStateHandle: SavedStateHandle,
     val state: StateFlow<UiState> = _state.asStateFlow()
 
     init {
-        if (_state.value.weatherList==null) {
-            getLocationName()
-            refresh()
-        } else
-            getWeather()
+        getLocationName()
+        refresh()
     }
 
     fun getWeather() {
@@ -54,14 +52,14 @@ class WeatherViewModel @Inject constructor(safeStateHandle: SavedStateHandle,
 
     fun refresh() {
         viewModelScope.launch {
-            _state.update { _state.value.copy (isRefreshing = true) }
-            val error = requestWeatherOfLocationUseCase (locationId)
+            _state.update { _state.value.copy(isRefreshing = true) }
+            val error = requestWeatherOfLocationUseCase(locationId)
             getWeather()
             _state.update { _state.value.copy(isRefreshing = false, error = error) }
         }
     }
 
-    fun getLocationName () {
+    fun getLocationName() {
         viewModelScope.launch {
             val locationName = getLocationNameUseCase(locationId)
             _state.update { UiState(locationName = locationName) }

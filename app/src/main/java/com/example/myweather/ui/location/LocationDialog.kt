@@ -25,19 +25,17 @@ class LocationDialog : DialogFragment() {
             // Pass null as the parent view because its going in the dialog layout
             builder.setView(binding.root)
                 // Add action buttons
-                .setPositiveButton(android.R.string.ok,
-                    DialogInterface.OnClickListener { dialog, id ->
-                        // Mandamos el resultado al fragment
-                        val locationName = binding.txtLocation.text.toString()
-                        setFragmentResult(Companion.requestKey, bundleOf("locationName" to locationName))
-                        getDialog()?.cancel()
-                        //findNavController().navigate(R.id.action_locationDialog_to_locationFragment)
-                    })
+                .setPositiveButton(android.R.string.ok) { dialog, id ->
+                    // Mandamos el resultado al fragment
+                    val locationName = binding.txtLocation.text.toString()
+                    setFragmentResult(
+                        Companion.requestKey,
+                        bundleOf("locationName" to locationName)
+                    )
+                    dialog.cancel()
+                }
 
-                .setNegativeButton(android.R.string.cancel,
-                    DialogInterface.OnClickListener { dialog, id ->
-                        getDialog()?.cancel()
-                    })
+                .setNegativeButton(android.R.string.cancel) { dialog, id -> dialog.cancel() }
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
     }

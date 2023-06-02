@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GetWeatherOfLocationUseCase @Inject constructor(private val repository: AppRepository) {
 
-    operator fun invoke(locationId: Int): Flow<List<Weather>> {
+    suspend operator fun invoke(locationId: Int): Flow<List<Weather>> {
         return repository.getWeatherOfLocation(locationId)
     }
 }
