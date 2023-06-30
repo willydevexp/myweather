@@ -11,12 +11,19 @@ import com.example.myweather.framework.AndroidPermissionChecker
 import com.example.myweather.framework.PlayServicesLocationDataSource
 import com.example.myweather.framework.database.AppDatabase
 import com.example.myweather.framework.database.RoomDataSource
+import com.example.myweather.framework.server.RemoteConnection
+import com.example.myweather.framework.server.RemoteService
 import com.example.myweather.framework.server.WeatherServerDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -40,7 +47,26 @@ object AppModule {
     @Singleton
     fun provideAppDao(db: AppDatabase) = db.appDao()
 
+    @Provides
+    @Singleton
+    @ApiUrl
+    fun provideApiUrl(): String = "https://api.openweathermap.org/"
 
+    @Provides
+    @Singleton
+    fun provideRemoteService(@ApiUrl apiUrl : String): RemoteService {
+        val okHttpClient = HttpLoggingInterceptor().run {
+            level = HttpLoggingInterceptor.Level.BODY
+            OkHttpClient.Builder().addInterceptor(this).build()
+        }
+
+        return Retrofit.Builder()
+            .baseUrl(apiUrl)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create()
+    }
 }
 
 @Module

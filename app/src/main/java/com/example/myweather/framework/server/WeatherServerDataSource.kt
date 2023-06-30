@@ -9,11 +9,13 @@ import com.example.myweather.domain.Weather
 import com.example.myweather.framework.tryCall
 import javax.inject.Inject
 
-class WeatherServerDataSource @Inject constructor (@ApiKey private val apiKey: String) : WeatherRemoteDataSource {
+class WeatherServerDataSource @Inject constructor (
+    @ApiKey private val apiKey: String,
+    private val remoteService: RemoteService) : WeatherRemoteDataSource {
 
     override suspend fun getDailyWeather(location: DomainLocation): Either<Error, List<Weather>> =
         tryCall {
-            RemoteConnection.service
+            remoteService
                 .getDailyWeather(
                     location.lat,
                     location.lon,
@@ -26,7 +28,7 @@ class WeatherServerDataSource @Inject constructor (@ApiKey private val apiKey: S
 
     override suspend fun findLocation(locationName: String): Either<Error, DomainLocation> =
         tryCall {
-            RemoteConnection.service
+            remoteService
                 .findLocation(
                     locationName,
                     apiKey

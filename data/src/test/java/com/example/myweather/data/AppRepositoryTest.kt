@@ -1,8 +1,12 @@
 package com.example.myweather.data
 
+import arrow.core.Either
+import arrow.core.right
 import com.example.myweather.data.datasource.LocalDataSource
 import com.example.myweather.data.datasource.WeatherRemoteDataSource
+import com.example.myweather.domain.DomainLocation
 import com.example.myweather.domain.Weather
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
@@ -60,6 +64,17 @@ class AppRepositoryTest {
         verify(localDataSource).addLocation(location)
     }
 
+
+    @Test
+    fun `Given a valid location name, the location is added to the repository`() = runBlocking {
+        val locationName = "Madrid"
+        val location = LocationServiceRepository.MADRID_LOCATION
+        whenever(remoteDataSource.findLocation(locationName)).thenReturn(location.right())
+
+       appRepository.addLocation(locationName)
+
+        verify(localDataSource).addLocation(location)
+    }
 
     @Test
     fun `Deleted location is deleted from local data source`(): Unit = runBlocking {
