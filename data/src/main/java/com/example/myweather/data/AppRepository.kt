@@ -28,9 +28,7 @@ class AppRepository @Inject constructor (
     }
 
     suspend fun addLocation(locationName: String) : Error? {
-        //val location = locationServiceRepository.findLocation(locationName)
         val location = findLocation(locationName)
-        // Guardamos el tiempo de la localización o devolvemos error
         location.fold(ifLeft = { return it }) {
             localDataSource.addLocation(it)
             return null
