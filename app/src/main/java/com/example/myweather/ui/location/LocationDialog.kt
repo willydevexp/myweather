@@ -1,7 +1,6 @@
 package com.example.myweather.ui.location
 
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
@@ -18,7 +17,7 @@ class LocationDialog : DialogFragment() {
         return activity?.let {
             val builder = AlertDialog.Builder(it)
             // Get the layout inflater
-            val inflater = requireActivity().layoutInflater;
+            val inflater = requireActivity().layoutInflater
             binding = DialogLocationBinding.inflate(inflater)
 
             // Inflate and set the layout for the dialog
@@ -29,7 +28,7 @@ class LocationDialog : DialogFragment() {
                     // Mandamos el resultado al fragment
                     val locationName = binding.txtLocation.text.toString()
                     setFragmentResult(
-                        Companion.requestKey,
+                        requestKey,
                         bundleOf("locationName" to locationName)
                     )
                     dialog.cancel()

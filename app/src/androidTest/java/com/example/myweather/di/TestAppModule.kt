@@ -2,14 +2,10 @@ package com.example.myweather.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.myweather.apptestshared.FakeAppDao
-import com.example.myweather.apptestshared.FakeRemoteService
-import com.example.myweather.apptestshared.buildLocationList
-import com.example.myweather.apptestshared.buildWeatherList
-import com.example.myweather.framework.database.AppDao
-import com.example.myweather.framework.server.RemoteService
 import com.example.myweather.R
+import com.example.myweather.framework.database.AppDao
 import com.example.myweather.framework.database.AppDatabase
+import com.example.myweather.framework.server.RemoteService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -48,6 +44,7 @@ object TestAppModule {
     @Singleton
     @ApiUrl
     fun provideApiUrl(): String = "http://localhost:8080/"
+
 
     @Provides
     @Singleton

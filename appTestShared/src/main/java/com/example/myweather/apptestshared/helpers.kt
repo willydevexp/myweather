@@ -5,14 +5,12 @@ import com.example.myweather.data.LocationServiceRepository
 import com.example.myweather.framework.database.EntityLocation
 import com.example.myweather.framework.database.EntityWeather
 import com.example.myweather.framework.database.RoomDataSource
-import com.example.myweather.framework.server.DayWeather
 import com.example.myweather.framework.server.WeatherServerDataSource
 
 
 fun buildRepositoryWith(
     locationList: List<EntityLocation>,
-    weatherList: List<EntityWeather>,
-    remoteWeatherData: List<DayWeather>
+    weatherList: List<EntityWeather>
 ): AppRepository {
     val locationDataSource = FakeLocationServiceDataSource()
     val permissionChecker = FakePermissionChecker()
@@ -22,7 +20,7 @@ fun buildRepositoryWith(
     return AppRepository(locationServiceRepository, localDataSource, remoteDataSource)
 }
 
-fun buildLocationList (vararg id: Int) = id.map {
+fun buildEntityLocationList (vararg id: Int) = id.map {
     EntityLocation(
         it,
         51.5073219,
@@ -33,7 +31,7 @@ fun buildLocationList (vararg id: Int) = id.map {
 }
 
 
-fun buildWeatherList(vararg locationId: Int) = locationId.map {
+fun buildEntityWeatherList(vararg locationId: Int) = locationId.map {
     EntityWeather(
         1,
         25.0,

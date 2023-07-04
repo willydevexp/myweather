@@ -1,7 +1,6 @@
 package com.example.myweather.ui.common
 
 
-import com.example.myweather.domain.Error
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

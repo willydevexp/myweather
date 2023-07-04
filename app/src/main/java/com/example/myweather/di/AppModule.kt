@@ -1,6 +1,7 @@
 package com.example.myweather.di
 
 import android.app.Application
+import androidx.lifecycle.SavedStateHandle
 import androidx.room.Room.databaseBuilder
 import com.example.myweather.R
 import com.example.myweather.data.PermissionChecker
@@ -11,13 +12,14 @@ import com.example.myweather.framework.AndroidPermissionChecker
 import com.example.myweather.framework.PlayServicesLocationDataSource
 import com.example.myweather.framework.database.AppDatabase
 import com.example.myweather.framework.database.RoomDataSource
-import com.example.myweather.framework.server.RemoteConnection
 import com.example.myweather.framework.server.RemoteService
 import com.example.myweather.framework.server.WeatherServerDataSource
+import com.example.myweather.ui.weather.WeatherFragmentArgs
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -51,6 +53,12 @@ object AppModule {
     @Singleton
     @ApiUrl
     fun provideApiUrl(): String = "https://api.openweathermap.org/"
+
+    @Provides
+    @ViewModelScoped
+    @LocationId
+    fun provideLocationId(savedStateHandle: SavedStateHandle) =
+        WeatherFragmentArgs.fromSavedStateHandle(savedStateHandle).locationId
 
     @Provides
     @Singleton
