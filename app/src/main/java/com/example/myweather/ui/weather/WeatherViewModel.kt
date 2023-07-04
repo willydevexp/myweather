@@ -19,13 +19,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-    safeStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val getLocationNameUseCase: GetLocationNameUseCase,
     private val requestWeatherOfLocationUseCase: RequestWeatherOfLocationUseCase,
     private val getWeatherOfLocationUseCase: GetWeatherOfLocationUseCase
 ) : ViewModel() {
 
-    private val locationId = WeatherFragmentArgs.fromSavedStateHandle(safeStateHandle).locationId
+    private val locationId = WeatherFragmentArgs.fromSavedStateHandle(savedStateHandle).locationId
 
     data class UiState(
         val isRefreshing: Boolean = false,

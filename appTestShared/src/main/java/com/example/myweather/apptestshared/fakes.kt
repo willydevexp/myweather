@@ -1,6 +1,5 @@
 package com.example.myweather.apptestshared
 
-import android.content.res.Resources
 import com.example.myweather.data.LocationServiceRepository
 import com.example.myweather.data.PermissionChecker
 import com.example.myweather.data.datasource.LocationServiceDataSource
@@ -9,12 +8,13 @@ import com.example.myweather.framework.database.AppDao
 import com.example.myweather.framework.database.EntityLocation
 import com.example.myweather.framework.database.EntityWeather
 import com.example.myweather.framework.server.DailyWeatherResponse
+import com.example.myweather.framework.server.DayWeather
 import com.example.myweather.framework.server.FindLocationResponse
 import com.example.myweather.framework.server.RemoteService
-import com.google.gson.Gson
+import com.example.myweather.framework.server.Temp
+import com.example.myweather.framework.server.WeatherType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-
 
 
 class FakeAppDao(locationList: List<EntityLocation>, weatherList: List<EntityWeather>) : AppDao {
@@ -25,7 +25,6 @@ class FakeAppDao(locationList: List<EntityLocation>, weatherList: List<EntityWea
     private lateinit var findWeatherListFlow: MutableStateFlow<List<EntityWeather>>
     private lateinit var findWeatherFlow: MutableStateFlow<EntityWeather>
 
-    private lateinit var findLocationFlow: MutableStateFlow<EntityLocation>
 
     override fun getAllWeather() = inMemoryWeatherList
 
@@ -47,6 +46,7 @@ class FakeAppDao(locationList: List<EntityLocation>, weatherList: List<EntityWea
     }
 
     override suspend fun deleteWeatherOfLocation(locationId: Int) {
+        findWeatherListFlow = MutableStateFlow(inMemoryWeatherList.value.filter { it.locationId == locationId })
         inMemoryWeatherList.value.minus(findWeatherListFlow.value.first { it.locationId == locationId })
     }
 
@@ -74,22 +74,20 @@ class FakeRemoteService() : RemoteService {
         appid: String,
         cnt: Int,
         units: String
-    ): DailyWeatherResponse {
-        val gson = Gson()
-        val dailyWeather = Resources.getSystem().openRawResource(R.raw.daily_weather);
-        return gson.fromJson(dailyWeather.toString(), DailyWeatherResponse::class.java)
-    }
+    ) = DailyWeatherResponse (listOf(DayWeather(
+        1688385600,
+         54,
+         1010,
+        5.0,
+        Temp(max=20.43, min=14.76),
+        listOf(WeatherType("clear sky", "01d"))
+    )))
 
     override suspend fun findLocation(
         cityName: String,
         appìd: String,
         limit: Int
-    ) : FindLocationResponse {
-        val gson = Gson()
-        val findLocation = Resources.getSystem().openRawResource(R.raw.find_location);
-        return gson.fromJson(findLocation.toString(), FindLocationResponse::class.java)
-    }
-
+    ): FindLocationResponse = FindLocationResponse()
 
 }
 
