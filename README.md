@@ -1,6 +1,8 @@
 # myweather
 Muestra la previsión de tiempo para los póximos 7 días en la localización actual. Además se pueden añadir otras localizaciones a una lista para ver la previsión de tiempo en las otras localizaciones.
+
 La información del tiempo y localizaciones se obtiene de https://openweathermap.org/
+
 Requiere GooglePlayServices para obtener la ubicación actual.
 
 Modularización por capas (Presentación(UI), Framework, Data, UseCases, Domain)
